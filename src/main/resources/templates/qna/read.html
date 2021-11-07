@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+
+<div layout:fragment="content">
+    <div class="bg-img-start" style="background-image: url(../assets/svg/components/card-11.svg);">
+        <div class="container content-space-t-3 content-space-t-lg-5 content-space-b-2">
+            <div class="w-md-75 w-lg-50 text-center mx-md-auto">
+                <h1>문의게시판</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container content-space-2 content-space-b-lg-3">
+        <div class="w-lg-75 mx-lg-auto">
+            <div class="d-grid">
+                <div class="d-grid">
+                    <div>
+                        <h1>문의사항</h1>
+                        <p>운영시간 : 오전 9시 ~ 오후 6시</p>
+                        <p>문의사항에 대한 답변은 영업일 기준 2~3일 소요가능합니다. </p>
+                    </div>
+
+                    <hr class="my-5">
+
+                    <dl class="row">
+                        <dt class="col-sm-4">번호</dt>
+                        <dd class="col-sm-8" name="qno">[[${dto.qno}]]</dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">제목</dt>
+                        <dd class="col-sm-8" name="title">[[${dto.title}]]</dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">작성자</dt>
+                        <dd class="col-sm-8" name="writer">[[${dto.writer}]]</dd>
+                    </dl>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">내용</dt>
+                        <dd class="col-sm-8" name="content">[[${dto.content}]]</dd>
+                    </dl>
+
+                    <div class="my-4">
+                        <div class="my-4">
+                            <div class="float-end">
+                                <button type="button" class="btn btn-soft-primary" th:onclick="|moveList()|">목록</button>
+                                <button type="button" class="btn btn-soft-primary" th:onclick="|modify(${dto.qno})|">수정</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--register reply-->
+                <div>
+                    <div class="form-group">
+                        <label>작성자</label>
+                        <input type="text" name="replyer" class="form-control form-control-user" id="replyer">
+                    </div>
+
+                    <div class="form-group">
+                        <label>댓글</label>
+                        <input type="text" name="replyText" class="form-control form-control-user" id="replyText">
+                    </div>
+                    <hr>
+                    <div class="input-group-append">
+                        <button onclick="registerReply()" class="btn btn-soft-primary">작성</button>
+                    </div>
+                </div>
+                <!--end register reply-->
+
+                <!--list reply-->
+                <div>
+                    <ul class="replyUL" style="list-style: none">
+
+                    </ul>
+                    <ul class="pagination">
+
+                    </ul>
+                </div>
+                <!--end reply-->
+
+                <div class="container content-space-b-lg-3">
+                    <div class="w-lg-75 mx-lg-auto">
+                        <div class="d-grid">
+
+                        </div>
+
+                        <div class="d-grid">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<th:block layout:fragment="script">
+
+    <script th:inline="javascript">
+        function modify(qno) {
+
+            const page = [[${pageRequestDTO.page}]]
+            const size = [[${pageRequestDTO.size}]]
+            const type = [[${pageRequestDTO.type}]]
+            const keyword = [[${pageRequestDTO.keyword}]]
+
+            let searchQuery = ''
+
+            if (type && keyword) {
+                searchQuery += `&type=${type}&keyword=${keyword}`
+            }
+
+            self.location = `/qna/modify?qno=${qno}&page=${page}&size=${size}` + searchQuery
+
+        }
+
+        function moveList() {
+
+            const page = [[${pageRequestDTO.page}]]
+            const size = [[${pageRequestDTO.size}]]
+            const type = [[${pageRequestDTO.type}]]
+            const keyword = [[${pageRequestDTO.keyword}]]
+
+            let searchQuery = ''
+
+            if (type && keyword) {
+                searchQuery += `&type=${type}&keyword=${keyword}`
+            }
+
+            self.location = `/qna/list?page=${page}&size=${size}` + searchQuery
+
+        }
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script th:inline="javascript">
+
+        const qno = [[${dto.qno}]]
+        let replyPage = 1
+        let replySize = 10
+
+        function makeListAndPaging(replyPageResponse) {
+
+            const dtoList = replyPageResponse.dtoList
+
+            replyPage = replyPageResponse.page
+            replySize = replyPageResponse.size
+
+            console.log(dtoList)
+
+            let str = ""
+            for (const qnaReply of dtoList) {
+                console.log(qnaReply)
+
+                str += `<li class="list-comment-item">
+                            <div class="d-flex align-items-center mb-3 backReplyBox">
+                                <div class="flex-shrink-0">-->
+                                <!--<img class="avatar" src="{/../../static/assets/profile-img.jpeg}">-->
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 style="font-size:20px">${qnaReply.replyer}</h6>
+                                        <span class="d-block small text-muted">${qnaReply.replyDate}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="replyBox" data-rno="${qnaReply.rno}"><span class="rtext">${qnaReply.replyText}</span>
+                                 <button type="button" class="btn btn-white btn-xs" onclick="modifyReply(this)">
+                                    <i class="bi-pencil me-1"></i> 수정
+                                 </button>
+                            </div>
+                        </li>`
+            }
+
+            document.querySelector(".replyUL").innerHTML = str
+
+
+            //페이징
+            const pagination = document.querySelector(".pagination")
+            let pageStr = ""
+
+            //이전
+            if (replyPageResponse.prev){
+                pageStr += ` <li class="page-item disabled"><a class="page-link" href="javascript:getList(${replyPageResponse.start -1})" tabindex="-1">이전</a></li>`
+            }
+
+            //num
+            for (let i = replyPageResponse.start; i <= replyPageResponse.end; i++){
+                pageStr += `<li class="page-item ${i == replyPageResponse.page ? "active" : ""}"><a class="page-link" href="javascript:getList(${i})">${i}</a></li>`
+            }
+
+            //다음
+            if (replyPageResponse.next){
+                pageStr += `<li class="page-item"><a class="page-link" href="javascript:getList(${replyPageResponse.end + 1})">다음</a></li>`
+            }
+
+            pagination.innerHTML = pageStr
+
+        }
+
+        async function getList(pageNum) {
+
+            const response = await axios.get(`/qna/replies/list/${qno}?page=${pageNum}`)
+            console.log(response)
+            const replyPageResponse = await response.data
+
+            //console.log(replyPageResponse)
+
+            makeListAndPaging(replyPageResponse)
+
+        }
+
+        function registerReply() {
+
+            const replyObj = {qno:qno,
+                replyer: document.querySelector("input[name='replyer']").value,
+                replyText: document.querySelector("input[name='replyText']").value
+            }
+
+            async function registerAjax() {
+
+                const response = await axios.post("/qna/replies", replyObj)
+                const replyPageResponse = await response.data
+
+                console.log(replyPageResponse)
+
+                makeListAndPaging(replyPageResponse)
+                document.querySelector("input[name='replyer']").value = ""
+                document.querySelector("input[name='replyText']").value = ""
+
+            }
+
+            registerAjax()
+
+        }
+
+        let cloneReply = null
+        let targetLi = null
+
+        const backReplyBox = document.querySelector(".backReplyBox")
+
+        function modifyReply(ele){
+            console.log(ele)
+
+            const targetDiv = ele.closest(".replyBox")
+            const currentTargetLi = ele.closest("li")
+
+            if (targetLi === null){
+                targetLi = currentTargetLi
+            }else if (targetLi !== currentTargetLi){
+                targetLi.querySelector("div").remove()
+                targetLi.appendChild(cloneReply)
+
+                targetLi = currentTargetLi
+            }
+
+            cloneReply = targetDiv.cloneNode(true)
+
+            const replyText = targetDiv.querySelector(".rtext").innerHTML
+            const rno = targetDiv.getAttribute("data-rno")
+
+            const modifyForm = `<div><input type="text" class="form-control form-control-user editText" value="${replyText}">
+                                <button type="button" class="btn btn-white btn-xs" onclick="modifyReplySend(this)">
+                                    <i class="bi-pencil me-1"></i> 수정
+                                </button>
+                                <button type="button" class="btn btn-white btn-xs" onclick="deleteReply(this)">
+                                    <i class="bi-trash me-1"></i> 삭제
+                                </button>
+                                <button type="button" class="btn btn-white btn-xs" onclick="cancelModifyReply(this)">
+                                    <i class="bi-back me-1"></i> 취소
+                                </button>`
+
+            targetLi.innerHTML = modifyForm
+        }
+
+        function cancelModifyReply(ele){
+            ele.closest("div").remove()
+            targetLi.appendChild(cloneReply)
+        }
+
+        function deleteReply(){
+            const rno = cloneReply.getAttribute("data-rno")
+
+            async function sendDeleteReply() {
+                const response = await axios.delete(`/replies/${qno}/${rno}?page=${replyPage}&size=${replySize}`)
+                const replyPageResponse = await response.data
+
+                alert("댓글이 삭제되었습니다.")
+                console.log(replyPageResponse)
+
+                makeListAndPaging(replyPageResponse)
+            }
+            sendDeleteReply()
+        }
+
+        function modifyReplySend(ele){
+            const rno = cloneReply.getAttribute("data-rno")
+            const replyText = document.querySelector(".editText").value
+
+            const replyObj = {rno, replyText, qno}
+
+            async function updateReply(){
+
+                const response = await axios.put(`/replies/${qno}/${rno}?page=${replyPage}&size=${replySize}`, replyObj)
+                const replyPageResponse = await response.data
+
+                alert("수정이 완료되었습니다.")
+                console.log(replyPageResponse)
+
+                makeListAndPaging(replyPageResponse)
+            }
+        }
+
+        getList(-1)
+    </script>
+
+</th:block>

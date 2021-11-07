@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+
+<div layout:fragment="content">
+
+    <div class="bg-img-start" style="background-image: url(../assets/svg/components/card-11.svg);">
+        <div class="container content-space-t-3 content-space-t-lg-5 content-space-b-2">
+            <div class="w-md-75 w-lg-50 text-center mx-md-auto">
+                <h1>문의게시판</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container content-space-2 content-space-b-lg-3">
+        <div class="w-lg-75 mx-lg-auto">
+            <div class="d-grid">
+                <div class="d-grid gap-3">
+                    <h2>문의 사항 등록</h2>
+
+                    <form th:action="@{/qna/register}" method="post">
+                        <!-- title -->
+                        <div class="row mb-4">
+                            <label for="titleLabel" class="col-sm-3 col-form-label form-label">제목</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="title" id="titleLabel" placeholder="제목을 입력하세요">
+                            </div>
+                        </div>
+                        <!-- End title -->
+
+                        <!-- writer -->
+                        <div class="row mb-4">
+                            <label for="writerLabel" class="col-sm-3 col-form-label form-label">작성자</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="writer" id="writerLabel" >
+                            </div>
+                        </div>
+                        <!-- End writer -->
+
+                        <!-- content -->
+                        <div class="row mb-4">
+                            <label for="writerLabel" class="col-sm-3 col-form-label form-label">내용</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="content" id="contentLabel" rows="10"
+                                placeholder="문의사항을 등록하세요."></textarea>
+                            </div>
+                        </div>
+
+<!--                        <div class="row mb-4">-->
+<!--                            <label class="col-sm-3 col-form-label form-label">내용</label>-->
+<!--                            <div class="col-sm-9">-->
+<!--                                &lt;!&ndash; Quill &ndash;&gt;-->
+<!--                                <div class="quill-custom">-->
+<!--                                    <div name="content" class="js-quill" style="height: 15rem;"-->
+<!--                                        data-hs-quill-options='{-->
+<!--                                        "placeholder": "문의사항을 등록하세요.",-->
+<!--                                        "modules": {-->
+<!--                                        "toolbar": [-->
+<!--                                        ["bold", "italic", "underline", "strike", "link", "image", "blockquote", "code", {"list": "bullet"}]-->
+<!--                                        ]-->
+<!--                                        }-->
+<!--                                        }'>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                &lt;!&ndash; End Quill &ndash;&gt;-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <!-- End content -->
+
+                        <!--button-->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">등록하기</button>
+                        </div>
+                        <!--End button-->
+                    </form>
+                </div>
+
+                <label for="basicFormFile" class="js-file-attach form-label"
+                       data-hs-file-attach-options='{
+                                                                "textTarget": "[for=\"customFile\"]"
+                                                                }'>첨부파일</label>
+                <input class="form-control" type="file" name="uploadFile" id="basicFormFile">
+
+                <div class="uploadResult">
+                    <ul>
+
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="script">
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script th:inline="javascript">
+
+        const inputFile = document.querySelector("input[name='uploadFile']")
+
+        document.querySelector("button[type='submit']").addEventListener("click",function(e){
+
+            e.preventDefault()
+            e.stopPropagation()
+
+            const liTags = document.querySelectorAll(".uploadResult ul li")
+
+            let str =""
+
+            for(let i = 0; i < liTags.length; i++){
+
+                var jobj = liTags[i]
+
+                str += "<input type='hidden' name='pictures["+i+"].fileName' value='"+jobj.getAttribute('data-filename')+"'>";
+                str += "<input type='hidden' name='pictures["+i+"].uuid' value='"+jobj.getAttribute('data-uuid')+"'>";
+                str += "<input type='hidden' name='pictures["+i+"].savePath' value='"+jobj.getAttribute("data-path")+"'>";
+                str += "<input type='hidden' name='pictures["+i+"].idx' value='"+ i+"'>";
+
+            }
+
+            console.log(str);
+            const targetDiv = document.querySelector(".hiddens")
+
+            targetDiv.innerHTML += str
+
+            document.querySelector("form").submit()
+
+        },false)
+
+        inputFile.addEventListener("change",function(e){
+
+            var formData = new FormData()
+
+            var files = inputFile.files
+
+            for(var i = 0; i < files.length; i++){
+
+                console.log(files[i])
+
+                formData.append("uploadFiles", files[i]);
+
+            }
+
+            async function uploadData() {
+
+                const response = await axios.post('/uploadAjax', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+
+                const data = response.data
+
+
+                showUploadFile(data)
+
+            }
+
+            uploadData()
+
+
+        },false)
+
+        const uploadUL = document.querySelector(".uploadResult ul")
+
+        function showUploadFile(arr){
+
+            console.log('--------------------------------')
+            console.log(arr)
+
+            let str = "";
+
+            for(let i = 0; i < arr.length; i++){
+
+                const obj = arr[i];
+
+                var fileCallPath =  encodeURIComponent( obj.savePath+ "/s_"+obj.uuid +"_"+obj.fileName)
+
+                str +=
+                    `<li data-path=${obj.savePath} data-uuid=${obj.uuid} data-filename=${obj.fileName} ><div>
+                  <span>${obj.fileName}</span>
+                 <button type='button' data-file=${fileCallPath} data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>
+                 <img src='/display?fileName=${fileCallPath}'>
+                 </div>
+                 </li>`
+
+            }
+
+            //console.log(str)
+            uploadUL.innerHTML += str
+
+
+        }
+
+    </script>
+</th:block>
+</html>

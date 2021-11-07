@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+
+<div layout:fragment="content">
+
+    <div class="bg-img-start" style="background-image: url(../assets/svg/components/card-11.svg);">
+        <div class="container content-space-t-3 content-space-t-lg-5 content-space-b-2">
+            <div class="w-md-75 w-lg-50 text-center mx-md-auto">
+                <h1>문의게시판</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="container content-space-2 content-space-b-lg-3">
+        <div class="w-lg-75 mx-lg-auto">
+            <div class="d-grid gap-10">
+                <div class="d-grid gap-3">
+                    <h2>문의 사항 등록</h2>
+
+                    <form th:action="@{/qna/register}" method="post">
+                        <!-- title -->
+                        <div class="row mb-4">
+                            <label for="titleLabel" class="col-sm-3 col-form-label form-label">제목</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="title" id="titleLabel" placeholder="제목을 입력하세요">
+                            </div>
+                        </div>
+                        <!-- End title -->
+
+                        <!-- writer -->
+                        <div class="row mb-4">
+                            <label for="writerLabel" class="col-sm-3 col-form-label form-label">작성자</label>
+
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="writer" id="writerLabel" >
+                            </div>
+                        </div>
+                        <!-- End writer -->
+
+                        <!-- content -->
+                        <div class="row mb-4">
+                            <label for="writerLabel" class="col-sm-3 col-form-label form-label">내용</label>
+
+                            <div class="col-sm-9">
+                                <textarea type="text" class="form-control" name="content" id="contentLabel" rows="10"
+                                          placeholder="문의사항을 등록하세요."></textarea>
+                            </div>
+                        </div>
+
+                        <!--button-->
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">등록하기</button>
+                        </div>
+                        <!--End button-->
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</html>

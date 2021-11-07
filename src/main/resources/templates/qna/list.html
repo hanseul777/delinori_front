@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/layout">
+
+<div layout:fragment="content">
+    <div class="container content-space-t-lg-3 content-space-b-1">
+
+        <!-- Hero -->
+            <div class="container content-space-2">
+                <div class="row justify-content-lg-between align-items-md-center">
+                    <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
+                        <div class="mb-3">
+                            <h1>문의사항</h1>
+                        </div>
+
+                        <form>
+                            <div class="tom-select-custom">
+                                <select id="searchType" class="js-select form-select" autocomplete="off"
+                                        data-hs-tom-select-options='{"dropdownWidth": "300px", "dropdownLeft": true}'>
+                                    <option value="" th:selected="${pageRequestDTO.type} == null">-----------</option>
+                                    <option value="T" th:selected="${pageRequestDTO.type} =='T'">제목</option>
+                                    <option value="C" th:selected="${pageRequestDTO.type} =='C'">내용</option>
+                                    <option value="W" th:selected="${pageRequestDTO.type} =='W'">작성자</option>
+                                    <option value="TC" th:selected="${pageRequestDTO.type} == 'TC'">제목/내용</option>
+                                    <option value="TCW" th:selected="${pageRequestDTO.type} == 'TCW'">제목/내용/작성자</option>
+                                </select>
+                            </div>
+                            <div class="input-card mb-3">
+                                <div class="input-card-form">
+                                    <label for="keyword" class="form-label visually-hidden">검색어를 입력하세요</label>
+                                    <input type="text" class="form-control form-control-lg" id="keyword"
+                                           th:value="${pageRequestDTO.keyword}"
+                                           placeholder="검색어를 입력하세요" aria-label="검색어를 입력하세요">
+                                </div>
+                                <button type="button" class="btn btn-primary btn-lg" id="searchBtn" onclick="search()">
+                                    <i class="bi-search"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- End Col -->
+                    <div class="col-md-6">
+                        <div class="ps-md-4">
+                            <img class="img-fluid" th:src="@{/assets/img/illustrations/key.png}"
+                                 alt="Image Description">
+                        </div>
+                    </div>
+                    <!-- End Col -->
+
+
+                    <div class="container content-space-2 content-space-b-lg-3">
+                        <div class="w-lg-75 mx-lg-auto">
+                            <div class="d-grid gap-10">
+                                <div class="d-grid gap-3">
+                                    <h2>자주 묻는 질문</h2>
+
+                                    <!-- Accordion -->
+                                    <div class="accordion accordion-flush accordion-lg" id="accordionFAQBasics">
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="headingBasicsOne">
+                                                <a class="accordion-button" role="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicsOne" aria-expanded="true" aria-controls="collapseBasicsOne">
+                                                    딜리노리는 어떤 서비스인가요?
+                                                </a>
+                                            </div>
+                                            <div id="collapseBasicsOne" class="accordion-collapse collapse show" aria-labelledby="headingBasicsOne" data-bs-parent="#accordionFAQBasics">
+                                                <div class="accordion-body">
+                                                    딜리노리는 누구나 시간과 장소에 구애받지 않고 거래대행자(딜리)를 통해 직거래를 진행 할 수 있는 서비스 입니다.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="headingBasicsTwo">
+                                                <a class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicsTwo" aria-expanded="false" aria-controls="collapseBasicsTwo">
+                                                딜리가 되기위해서는 어떻게 해야하나요?
+                                                </a>
+                                            </div>
+                                            <div id="collapseBasicsTwo" class="accordion-collapse collapse" aria-labelledby="headingBasicsTwo" data-bs-parent="#accordionFAQBasics">
+                                                <div class="accordion-body">
+                                                    <p><a href="#">딜리로 가입하기</a>에서 회원가입을 진행해주세요.</p>
+                                                    <p>회원가입창에서 요구하는 정보와 서류를 제출하시면 담당자가 순차적으로 검토 후 교육영상을 발송합니다. 영상을 정상적으로 수료시 승인됩니다.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="headingBasicsThree">
+                                                <a class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicsThree" aria-expanded="false" aria-controls="collapseBasicsThree">
+                                                    딜리를 구하지 않고 중고거래는 할 수 없나요?
+                                                </a>
+                                            </div>
+                                            <div id="collapseBasicsThree" class="accordion-collapse collapse" aria-labelledby="headingBasicsThree" data-bs-parent="#accordionFAQBasics">
+                                                <div class="accordion-body">
+                                                    상호 합의하에 딜리가 없는 일반적인 중고거래도 가능합니다.
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="accordion-item">
+                                            <div class="accordion-header" id="headingBasicsFour">
+                                                <a class="accordion-button collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicsFour" aria-expanded="false" aria-controls="collapseBasicsFour">
+                                                    딜리서비스를 사용하려면 어떻게 해야하나요?
+                                                </a>
+                                            </div>
+                                            <div id="collapseBasicsFour" class="accordion-collapse collapse" aria-labelledby="headingBasicsFour" data-bs-parent="#accordionFAQBasics">
+                                                <div class="accordion-body">
+                                                    <P>판매자</P>
+                                                    <p>- 게시글을 올릴 때 '딜리사용'을 체크 후 게시글을 등록해주세요.</p>
+                                                    <p>- 등록 후 <a href="#">내주변딜리찾기</a>를 이용해 딜리에게 연락해주세요.</P>
+                                                    <p>구매자</p>
+                                                    <p>- 구매하고 싶은 게시글에 딜리표시가 있다면, 판매자에게 해당 상품의 딜리 프로필을 문의해주세요.</p>
+                                                    <p>- 구매하고 싶은 게시글에 딜리표시가 없다면, <a href="#">내주변딜리찾기</a>를 이용해 딜리에게 연락해주세요.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Accordion -->
+
+                                    <form th:action="@{/qna/register}" method="get">
+                                        <div style="float: right;">
+                                            <button type="submit" class="btn btn-soft-primary">글쓰기</button>
+                                        </div>
+                                    </form>
+
+                                </div>
+
+                                <div>
+                                    <!-- Table -->
+                                    <table class="table table-borderless table-thead-bordered">
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th scope="col">번호</th>
+                                                <th scope="col">제목</th>
+                                                <th scope="col">작성자</th>
+                                                <th scope="col">작성일</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr th:each="qna:${responseDTO.dtoList}">
+                                                <th scope="row">[[${qna.qno}]]</th>
+                                                <td><a th:href="|javascript:movePage(${responseDTO.page}, ${qna.qno})|">[[${qna.title}]]</a>
+                                                    ([[${qna.replyCount}]])</td>
+                                                <td>[[${qna.writer}]]</td>
+                                                <td>[[${#temporals.format(qna.regDate,'yyyy/MM/dd')}]]</td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                                    <!-- End Table -->
+
+                                    <!-- Pagination -->
+                                    <div class="d-flex justify-content-center">
+                                        <ul class="pagination">
+                                            <li th:if="${responseDTO.prev}" class="page-item">
+                                                <a class="page-link" th:href="|javascript:movePage(${responseDTO.start-1})|" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                    <span class="sr-only">이전</span>
+                                                </a>
+                                            </li>
+
+                                            <li th:each="num: ${#numbers.sequence( responseDTO.start , responseDTO.end)}" th:class="|page-item ${responseDTO.page == num?'active':''}|">
+                                                <a class="page-link" th:href="|javascript:movePage(${num})|">[[${num}]]</a>
+                                            </li>
+
+                                            <li th:if="${responseDTO.next}" class="page-item">
+                                                <a class="page-link" th:href="|javascript:movePage(${responseDTO.end+1})|" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                    <span class="sr-only">다음</span>
+                                                </a>
+                                            </li>
+
+                                        </ul>
+                                    </div>
+                                    <!-- End Pagination -->
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End FAQ -->
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <th:block  layout:fragment="script">
+
+        <script th:inline="javascript">
+
+            const pageRequest = [[${pageRequestDTO}]]
+
+            function movePage(page, qno) {
+
+                console.log(pageRequest)
+
+                let uri ="";
+
+                const type = pageRequest.type
+                const keyword = pageRequest.keyword
+
+                let searchQuery = ''
+                if(type && keyword){
+                    searchQuery += `&type=${type}&keyword=${keyword}`
+                }
+
+                if(qno) {
+                    uri = `/qna/read?qno=${qno}&page=${page}` + searchQuery
+                }else {
+                    uri = `/qna/list?page=${page}` + searchQuery
+                }
+                self.location = uri
+            }
+
+            function search() {
+                const searchSelect = document.querySelector("#searchType")
+
+                const type = searchSelect.options[searchSelect.selectedIndex].value
+
+                const keyword = encodeURI(document.querySelector("#keyword").value)
+
+                console.log("type", type, "keyword", keyword)
+
+                self.location =`/qna/list?page=1&type=${type}&keyword=${keyword}`
+            }
+
+        </script>
+
+
+    </th:block>
+
+</div>
+</html>
