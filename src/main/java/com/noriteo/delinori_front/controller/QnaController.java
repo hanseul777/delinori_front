@@ -7,6 +7,7 @@ import com.noriteo.delinori_front.dto.QnaListDTO;
 import com.noriteo.delinori_front.service.QnaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class QnaController {
         model.addAttribute("responseDTO", qnaService.getListWithReplyCount(pageRequestDTO));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/register")
     public void register() {
 

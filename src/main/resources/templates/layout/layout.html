@@ -31,7 +31,7 @@
     <div class="container">
         <nav class="js-mega-menu navbar-nav-wrap navbar-floating-nav bg-white">
             <!-- Default Logo -->
-            <a class="navbar-brand" th:href="@{/./index.html}" aria-label="Front">
+            <a class="navbar-brand" th:href="@{/./main}" aria-label="Front">
                 <img class="navbar-brand-logo" th:src="@{/assets/svg/logos/delinori_logo.svg}" alt="Logo">
             </a>
             <!-- End Default Logo -->
@@ -118,20 +118,10 @@
 
                     <!-- Company -->
                     <li class="hs-has-sub-menu nav-item">
-                        <a id="companyMegaMenu" class="hs-mega-menu-invoker nav-link " th:href="@{/#}" role="button" data-bs-toggle="dropdown" aria-expanded="false">문의사항</a>
+                        <a class="hs-mega-menu-invoker nav-link " th:href="@{/./qna/list}" role="button">문의사항</a>
 
                         <!-- Mega Menu -->
-                        <div class="hs-sub-menu dropdown-menu" aria-labelledby="companyMegaMenu" style="min-width: 14rem;">
-                            <a class="dropdown-item " th:href="@{/./page-about.html}">About</a>
-                            <a class="dropdown-item " th:href="@{/./page-services.html}">Services</a>
-                            <a class="dropdown-item " th:href="@{/./page-customer-stories.html}">Customer Stories</a>
-                            <a class="dropdown-item " th:href="@{/./page-customer-story.html}">Customer Story</a>
-                            <a class="dropdown-item " th:href="@{/./page-careers.html}">Careers</a>
-                            <a class="dropdown-item " th:href="@{/./page-careers-overview.html}">Careers Overview</a>
-                            <a class="dropdown-item " th:href="@{/./page-hire-us.html}">Hire Us</a>
-                            <a class="dropdown-item " th:href="@{/./page-pricing.html}">Pricing</a>
-                            <a class="dropdown-item " th:href="@{/./page-contacts-agency.html}">Contacts: Agency</a>
-                            <a class="dropdown-item " th:href="@{/./page-contacts-startup.html}">Contacts: Startup</a>
+                        <div class="hs-sub-menu" aria-labelledby="companyMegaMenu" style="min-width: 14rem;">
                         </div>
                         <!-- End Mega Menu -->
                     </li>
@@ -228,7 +218,7 @@
 
                     <!-- Button -->
                     <li class="nav-item">
-                        <a class="btn btn-primary btn-transition" th:href="@{/https://themes.getbootstrap.com/product/front-multipurpose-responsive-template/}" target="_blank">로그인</a>
+                        <a class="btn btn-primary btn-transition" th:href="@{/./customLogin}" target="_blank">로그인</a>
                     </li>
                     <!-- End Button -->
                 </ul>
