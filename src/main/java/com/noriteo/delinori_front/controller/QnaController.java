@@ -44,6 +44,7 @@ public class QnaController {
         return "redirect:/qna/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping(value = {"/read","/modify"})
     public void read(Long qno, PageRequestDTO pageRequestDTO, Model model){
 

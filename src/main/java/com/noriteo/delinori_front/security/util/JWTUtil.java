@@ -40,6 +40,5 @@ public class JWTUtil {
                 .build()                    // (3)
                 .parseClaimsJws(token); // (4)
 
-
     }
 }
